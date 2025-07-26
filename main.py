@@ -1,17 +1,47 @@
 import asyncio
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram.types import Message, FSInputFile
 
 import random
 from dotenv import load_dotenv
 import os
+
+from gtts import gTTS
+
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
+
+@dp.message(Command('video'))
+async def video(message:Message):
+    await bot.send_chat_action(message.chat.id, 'upload_video')
+    video = FSInputFile("Стоковое видео.mp4")
+    await bot.send_video(message.chat.id, video)
+
+@dp.message(Command('audio'))
+async def audio(message:Message):
+    audio = FSInputFile("Стоковое аудио Show-Me-Again.m4a")
+    await bot.send_audio(message.chat.id, audio)
+
+@dp.message(Command('training'))
+async def training(message:Message):
+    training_list = [
+        "Тренировка 1: Скакалка или имитация (прыжки на месте) – 2 мин., Берпи без отжимания – 3 подхода по 10–12 раз., Скручивания лёжа (пресс) – 3 подхода по 15–20 раз., Планка – 3 подхода по 30 сек (или сколько выдержишь)., Бег на месте с высоким подниманием колен – 2 мин.",
+        "Тренировка 2: Приседания с собственным весом – 3×15., Отжимания (на коленях или классические) – 3×10–15., Ягодичный мост (лёжа, таз вверх) – 3×15., Супермен (лёжа на животе, руки и ноги вверх) – 3×12., Планка на боку – по 20–30 сек на каждую сторону.",
+        "Тренировка 3: Прыжки в сторону (имитируем конькобежцев)., Отжимания + колено к груди., Приседания с выпрыгиванием., Альпинист (упор лёжа, колени к груди).",
+    ]
+    rand_tr = random.choice(training_list)
+    await message.answer(f"Это ваша тренировка на сегодня - {rand_tr}")
+
+    tts = gTTS(text=rand_tr, lang='ru')
+    tts.save("training.mp3")
+    audio = FSInputFile("training.mp3")
+    await bot.send_audio(message.chat.id, audio)
+    os.remove("training.mp3")
 
 @dp.message(Command('photo', prefix='&'))
 async def photo(message:Message):
