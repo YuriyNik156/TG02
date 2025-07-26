@@ -22,6 +22,16 @@ async def video(message:Message):
     video = FSInputFile("Стоковое видео.mp4")
     await bot.send_video(message.chat.id, video)
 
+@dp.message(Command('voice'))
+async def voice(message:Message):
+    voice = FSInputFile("sample.ogg")
+    await message.answer_voice(voice)
+
+@dp.message(Command('doc'))
+async def doc(message:Message):
+    doc = FSInputFile("База данных бота.pdf")
+    await bot.send_document(message.chat.id, doc)
+
 @dp.message(Command('audio'))
 async def audio(message:Message):
     audio = FSInputFile("Стоковое аудио Show-Me-Again.m4a")
@@ -38,10 +48,10 @@ async def training(message:Message):
     await message.answer(f"Это ваша тренировка на сегодня - {rand_tr}")
 
     tts = gTTS(text=rand_tr, lang='ru')
-    tts.save("training.mp3")
-    audio = FSInputFile("training.mp3")
-    await bot.send_audio(message.chat.id, audio)
-    os.remove("training.mp3")
+    tts.save("training.ogg")
+    audio = FSInputFile("training.ogg")
+    await bot.send_voice(message.chat.id, audio)
+    os.remove("training.ogg")
 
 @dp.message(Command('photo', prefix='&'))
 async def photo(message:Message):
