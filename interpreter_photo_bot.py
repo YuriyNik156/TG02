@@ -16,7 +16,7 @@ async def start(message:Message):
     await message.answer(f"Привет, {message.from_user.first_name}")
 
 @dp.message(Command("help"))
-async def start(message:Message):
+async def help(message:Message):
     await message.answer("Данный бот умеет выполнять команды: \n /start \n /help")
 
 # Напишите код для сохранения всех фото, которые отправляет пользователь боту в папке img
